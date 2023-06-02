@@ -1,3 +1,27 @@
 <template>
-    
+        <lightning-card title="Custom Login Hours">
+            <lightning-layout>
+                <lightning-layout-item size="12" padding="around-small">
+                    <p>Select the days and set the custom login hours:</p>
+                </lightning-layout-item>
+            </lightning-layout>
+            <lightning-layout>
+                <template for:each={daysOfWeek} for:item="day">
+                    <lightning-layout-item key={day.value} size="6" padding="around-small">
+                        <div class="day-container">
+                            <p>{day.label}</p>
+                            <lightning-input type="time" label="Start Time" value={startHours[day.value]} onchange={handleStartChange} data-day={day.value}></lightning-input>
+                            <lightning-input type="time" label="End Time" value={endHours[day.value]} onchange={handleEndChange} data-day={day.value}></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        <!--    <lightning-layout>
+                <lightning-layout-item size="12" padding="around-small">
+                   
+                </lightning-layout-item>
+            </lightning-layout>-->
+        </lightning-card>
+        <lightning-button label="Save" onclick={handleSave}></lightning-button>
+    <c:user-select-component></c:user-select-component>
 </template>
