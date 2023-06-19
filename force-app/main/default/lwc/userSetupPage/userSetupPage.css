@@ -4,3 +4,10 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+.setPosition {
+    z-index: -1;
+}
+.lgc-bg {
+    /* background-color: rgb(242, 242, 242); */
+    height : 600px;
+}

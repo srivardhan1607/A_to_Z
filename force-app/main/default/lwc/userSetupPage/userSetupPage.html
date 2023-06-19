@@ -1,27 +1,242 @@
 <template>
-        <lightning-card title="Custom Login Hours">
-            <lightning-layout>
-                <lightning-layout-item size="12" padding="around-small">
-                    <p>Select the days and set the custom login hours:</p>
-                </lightning-layout-item>
-            </lightning-layout>
-            <lightning-layout>
-                <template for:each={daysOfWeek} for:item="day">
-                    <lightning-layout-item key={day.value} size="6" padding="around-small">
-                        <div class="day-container">
-                            <p>{day.label}</p>
-                            <lightning-input type="time" label="Start Time" value={startHours[day.value]} onchange={handleStartChange} data-day={day.value}></lightning-input>
-                            <lightning-input type="time" label="End Time" value={endHours[day.value]} onchange={handleEndChange} data-day={day.value}></lightning-input>
-                        </div>
-                    </lightning-layout-item>
+    <lightning-card title="Setup Page" style="height:200px">
+        <div class="lgc-bg">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_5-of-12 slds-p-left_xx-large slds-p-right_medium slds-float_right">     
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-p-left_xx-large slds-p-right_medium">
+                    <c-user-select-component onlookupselected={handlelookupselected} onlookupunselected={handlelookupunselected}></c-user-select-component>
+                </div>
+                <div class="slds-col slds-size_4-of-12 slds-p-left_xx-large slds-p-right_medium">
+                </div>
+            </div>
+            <template if:true={showProfileMetadata}>
+                <br/>
+            <div class="slds-grid slds-wrap"> 
+                <div class="slds-col slds-size_2-of-12 slds-p-left_xx-large">
+                    <lightning-vertical-navigation selected-item={selectedNavItem}>
+                        <lightning-vertical-navigation-section label="Profile Metadata">
+                            <lightning-vertical-navigation-item label="Specify login hours" name="loginHours" onclick={handleItems}></lightning-vertical-navigation-item>
+                            <lightning-vertical-navigation-item label="Specify login IP Ranges" name="loginIpRanges" onclick={handleItems}></lightning-vertical-navigation-item>
+                        </lightning-vertical-navigation-section>
+                    </lightning-vertical-navigation>
+                </div>
+                <div if:true={showLoginHours} class="slds-col slds-size_10-of-12 slds-p-left_xx-large">
+                    <br/>
+                    <table class="slds-table slds-no-row-hover slds-table_cell-buffer slds-table_fixed-layout" style="width:60%;margin-left:20%">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Typical Column Header">Day</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Wrapped, line clamped">Start Time</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Typical Column Header">End Time</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Typical Column Header"></div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={daysOfWeek} for:item="rec" for:index="index">
+                    <tr key={rec}  class="slds-hint-parent">
+                       
+                        <th data-label="Typical Column Header" scope="row">
+                            <div class="slds-truncate" title="Typical cell content"><b>{rec.label}</b></div>
+                        </th>
+                        <td class="slds-cell-wrap" data-label="Wrapped, line clamped">
+                            <!-- <div class="slds-truncate" title="Typical cell content">Typical cell content</div> -->
+                                <!-- <label for="startHour">Start Hour</label> -->
+    
+                               <lightning-combobox
+                                data-id={index}
+                                dropdown-alignment="auto"
+                                name="progress"
+                                value={rec.startHour}
+                                placeholder="--None--"
+                                options={startHours}
+                                onchange={handleStartHourChange} ></lightning-combobox>
+    
+                               <!-- <select onchange={handleStartHourChange} data-id={rec.value}>
+                                <option value={rec.value}>{rec.startHour}</option>
+                                <template for:each={startHours} for:item="hour">
+                                    <option key={hour.value} value={hour.value} selected={rec.startHour}>{hour.label}</option>
+                                </template>
+                                </select> -->
+                        </td>
+                        <td data-label="Typical Column Header">
+                            <!-- <div class="slds-truncate" title="Typical cell content">Typical cell content</div> -->
+                            <!-- <label for="endHour">End Hour</label> -->
+              
+                            <lightning-combobox
+                            data-id={index}
+                            dropdown-alignment="auto"
+                            name="progress"
+                            value={rec.endHour}
+                            placeholder="--None--"
+                            options={endHours}
+                            onchange={handleEndHourChange} ></lightning-combobox>
+    
+                            <!-- <select onchange={handleEndHourChange} data-id={rec.value}>
+                            <option value="">--None--</option>
+                            <template for:each={endHours} for:item="hour">
+                                <option key={hour.value} value={hour.value}>{hour.label}</option>
+                            </template>
+                            </select> -->
+                        </td>
+                        <!-- <td data-label="Typical Column Header">
+                            <lightning-input re></lightning-input>
+                        </td> -->
+                       
+                    </tr>
                 </template>
-            </lightning-layout>
-        <!--    <lightning-layout>
-                <lightning-layout-item size="12" padding="around-small">
-                   
-                </lightning-layout-item>
-            </lightning-layout>-->
-        </lightning-card>
-        <lightning-button label="Save" onclick={handleSave}></lightning-button>
-    <c:user-select-component></c:user-select-component>
+                        </tbody>
+                        </table><br/>
+                        <lightning-button class="slds-align_absolute-center" label="Save" variant="brand" onclick={handleSave}></lightning-button> 
+                        <br/>
+                </div>
+                <div if:true={noLoginIPRanges} class="slds-col slds-size_10-of-12 slds-p-left_xx-large">
+                    <div class="slds-clearfix">
+                        <div class="slds-float_right" style="margin-right:5%">
+                        <lightning-button-group>
+                            <lightning-button label="New" class="slds-p-right_xx-small" variant="brand" onclick={handleCreateNewIpRange}></lightning-button> 
+                            <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button> 
+                        </lightning-button-group>
+                        </div>
+                    </div>
+                    <div class="slds-align_absolute-center"><b>No IP Ranges found</b></div>
+                </div>
+                <div if:true={showLoginIPRanges} class="slds-col slds-size_10-of-12 slds-p-left_xx-large">
+                    <div class="slds-clearfix">
+                        <div class="slds-float_right" style="margin-right:5%">
+                        <lightning-button-group>
+                            <lightning-button label="New" class="slds-p-right_xx-small" variant="brand" onclick={handleCreateNewIpRange}></lightning-button> 
+                            <lightning-button label="Save" variant="brand" onclick={handleSave}></lightning-button> 
+                        </lightning-button-group>
+                        </div>
+                    </div>
+                    <div class="slds-p-around_x-small">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="">
+                                    <th class="slds-size_3-of-10" scope="col">
+                                        <div class="slds-truncate" title="Account Name">Start Address</div>
+                                    </th>
+                                    <th class="slds-size_3-of-10" scope="col">
+                                        <div class="slds-truncate" title="Control">End Address</div>
+                                    </th>
+                                    <th class="slds-size_3-of-10" scope="col">
+                                        <div class="slds-truncate" title="Control">Description</div>
+                                    </th>
+                                    <th class="slds-size_1-of-10" scope="col">
+                                        <div class="slds-truncate" title="Action">Action</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            <template for:each = {profileMetaData.loginIpRanges} for:item = "rec" for:index="index">
+                                <tr key={rec} class="slds-hint-parent">
+                                    <td class="slds-size_3-of-10" data-label="Prospecting">
+                                        <div title="Prospecting">
+                                            <lightning-input data-id={index} name="startAddress" onchange={handleIpRanges} value={rec.startAddress}></lightning-input>
+                                        </div>
+                                    </td>
+                                    <td class="slds-size_3-of-10" data-label="Prospecting">
+                                        <div title="Prospecting">
+                                            <lightning-input data-id={index} name="endAddress" onchange={handleIpRanges} value={rec.endAddress}> </lightning-input>                         
+                                        </div>
+                                    </td>
+                                    <td class="slds-size_3-of-10" data-label="Prospecting">
+                                        <div title="Prospecting">
+                                            <lightning-input data-id={index} name="description" onchange={handleIpRanges} value={rec.description} > </lightning-input>                         
+                                        </div>
+                                    </td>
+                                    <td class="slds-size_1-of-10" data-label="Prospecting">
+                                        <lightning-button-icon data-id={index} icon-name="utility:delete" label="Delete" onclick={handleDeleteIpRanges}></lightning-button-icon>                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <br/>    
+            </div>
+            </div>  
+        </template>
+     
+
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New LoginIpRanges</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_6-of-12 slds-p-left_xx-large slds-p-right_medium">
+                        <lightning-input type="text" label="Start IP Address:" name="startAddress" value={newloginIpRange.startAddress} onchange={handleNewIPRange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12 slds-p-right_xx-large slds-p-left_medium">
+                        <lightning-input type="text" label="End IP Address :" name="endAddress" value={newloginIpRange.endAddress} onchange={handleNewIPRange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12 slds-p-left_xx-large slds-p-right_medium">
+                        <lightning-input type="text" label="Description :" name="description" value={newloginIpRange.description} onchange={handleNewIPRange}></lightning-input>
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={handleSaveIPRange}>Save</button>
+                <button class="slds-button slds-button_neutral" onclick={handleModal}>Cancel</button>
+                </div>
+                </div>
+                </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+
+        <template if:true={showEditModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                <h1 class="slds-modal__title slds-hyphenate">New LoginIpRanges</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_6-of-12 slds-p-left_xx-large slds-p-right_medium">
+                        <lightning-input type="text" label="Start IP Address:" name="startAddress" value={editLoginIpRange.startAddress} onchange={handleEditIPRange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12 slds-p-right_xx-large slds-p-left_medium">
+                        <lightning-input type="text" label="End IP Address :" name="endAddress" value={editLoginIpRange.endAddress} onchange={handleEditIPRange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12 slds-p-left_xx-large slds-p-right_medium">
+                        <lightning-input type="text" label="Description :" name="description" value={editLoginIpRange.description} onchange={handleEditIPRange}></lightning-input>
+                    </div>
+                </div>
+                </div>
+                <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={handleSaveEditIPRange}>Save</button>
+                <button class="slds-button slds-button_neutral" onclick={handleCloseModal}>Cancel</button>
+                </div>
+                </div>
+                </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+</div>
+            </lightning-card>
+ 
+   
 </template>
