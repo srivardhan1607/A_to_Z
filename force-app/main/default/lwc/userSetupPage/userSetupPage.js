@@ -202,6 +202,17 @@ export default class UserSetupPage extends LightningElement {
           //   this.loginHours = temploginHours;
           //   console.log('this.loginHours 148'+JSON.stringify(temploginHours)); 
     }
+    handleClearLoginHour(event)
+    {
+      let index = event.target.dataset.id;
+      console.log('index'+index);
+      if(index != undefined)
+      {
+        this.daysOfWeek[index].startHour = null;
+        this.daysOfWeek[index].endHour = null;
+      }
+      console.log('this.daysOfWeek'+JSON.stringify(this.daysOfWeek));
+    }
     handleStartHourChange(event) {
         const selectedStartHour = event.target.value;
         const day = event.target.dataset.id;

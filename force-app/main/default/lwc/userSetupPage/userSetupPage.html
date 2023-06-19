@@ -36,7 +36,7 @@
                                     <div class="slds-truncate" title="Typical Column Header">End Time</div>
                                 </th>
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Typical Column Header"></div>
+                                    <div class="slds-truncate slds-align_absolute-center" title="Typical Column Header"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -87,9 +87,10 @@
                             </template>
                             </select> -->
                         </td>
-                        <!-- <td data-label="Typical Column Header">
-                            <lightning-input re></lightning-input>
-                        </td> -->
+                        <td data-label="Typical Column Header">
+                            <div data-id={index} class="slds-align_absolute-center slds-text-link_reset" onclick={handleClearLoginHour}>Clear</div>
+                            <!-- <lightning- class="slds-align_absolute-center" value="clear" label="Clear"></lightning-formatted-url> -->
+                        </td>
                        
                     </tr>
                 </template>
