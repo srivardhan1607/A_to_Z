@@ -130,7 +130,7 @@ export default class UserSetupPage extends LightningElement {
        {
         this.selectedNavItem = 'loginIpRanges';
         this.showLoginHours = false;
-        if(this.profileMetaData.loginIpRanges.length>0)
+        if(this.loginIpRanges.length>0)
         {
           this.showLoginIPRanges = true;
           this.noLoginIPRanges = false;
@@ -146,6 +146,7 @@ export default class UserSetupPage extends LightningElement {
         this.showLoginHours = true;
         this.showLoginIPRanges = false;
         this.showProfileMetadata = false;
+        this.loginIpRanges = [];
       //  location.reload();
     }
     handlelookupselected(event)
@@ -189,6 +190,7 @@ export default class UserSetupPage extends LightningElement {
               }
             })
             .catch((error) => {
+              console.log('error',JSON.stringify(error));
               const event = new ShowToastEvent({
                 title: 'Toast message',
                 message: error,
@@ -196,21 +198,54 @@ export default class UserSetupPage extends LightningElement {
                 mode: 'dismissable'
             });
             this.dispatchEvent(event);
+            this.loginIpRanges = [];
             });
-
-          //   let temploginHours =  this.profileMetaData.loginHours;
-          //   this.loginHours = temploginHours;
-          //   console.log('this.loginHours 148'+JSON.stringify(temploginHours)); 
     }
     handleClearLoginHour(event)
     {
-      let index = event.target.dataset.id;
-      console.log('index'+index);
-      if(index != undefined)
+      let day = event.target.dataset.id;
+      console.log('day'+day);
+      if(day != undefined)
       {
-        this.daysOfWeek[index].startHour = null;
-        this.daysOfWeek[index].endHour = null;
+        this.daysOfWeek[day].startHour = null;
+        this.daysOfWeek[day].endHour = null;
       }
+
+      if(day == 0)
+        {
+          this.profileMetaData.loginHours.sundayStart = null;
+          this.profileMetaData.loginHours.sundayEnd = null;
+        }
+        if(day == 1)
+        {
+          this.profileMetaData.loginHours.mondayStart = null;
+          this.profileMetaData.loginHours.mondayEnd = null;
+        }
+        if(day == 2)
+        {
+          this.profileMetaData.loginHours.tuesdayStart = null;
+          this.profileMetaData.loginHours.tuesdayEnd = null;
+        }
+        if(day == 3)
+        {
+          this.profileMetaData.loginHours.wednesdayStart = null;
+          this.profileMetaData.loginHours.wednesdayEnd = null;
+        }
+        if(day == 4)
+        {
+          this.profileMetaData.loginHours.thursdayStart = null;
+          this.profileMetaData.loginHours.thursdayEnd = null;
+        }
+        if(day == 5)
+        {
+          this.profileMetaData.loginHours.fridayStart = null;
+          this.profileMetaData.loginHours.fridayEnd = null;
+        }
+        if(day == 6)
+        {
+          this.profileMetaData.loginHours.saturdayStart = null;
+          this.profileMetaData.loginHours.saturdayEnd = null;
+        }
       console.log('this.daysOfWeek'+JSON.stringify(this.daysOfWeek));
     }
     handleStartHourChange(event) {
@@ -299,7 +334,8 @@ export default class UserSetupPage extends LightningElement {
       {
          let name = event.target.name;
          let index = event.target.dataset.id;
-         this.profileMetaData.loginIpRanges[index][name] = event.target.value;
+         this.loginIpRanges[index][name] = event.target.value;
+         this.profileMetaData.loginIpRanges = this.loginIpRanges;
          console.log('this.loginIpRanges', name);
          console.log('this.profileMetaData.loginIpRanges', JSON.stringify(this.profileMetaData.loginIpRanges));
       }
@@ -314,11 +350,19 @@ export default class UserSetupPage extends LightningElement {
           console.log('index'+ index);
         //  this.profileMetaData.loginHours = [];
           
-          let tempdata = { ...this.profileMetaData };
-          tempdata.loginIpRanges.splice(index, 1);
-          console.log('tempdata.loginIpRanges', JSON.stringify(tempdata.loginIpRanges));
+          let tempdata = this.loginIpRanges;
+          tempdata.splice(index, 1);
+          console.log('tempdata.loginIpRanges', JSON.stringify(tempdata));
          // this.profileMetaData.loginIpRanges = [...tempdata.loginIpRanges];
-          this.profileMetaData = { ...tempdata };
+          this.loginIpRanges = tempdata;
+          console.log('this.profileMetaData.loginIpRanges', JSON.stringify(this.loginIpRanges));
+          if(this.loginIpRanges.length == 0)
+          {          
+             this.showLoginHours = false;
+             this.noLoginIPRanges = true;
+             this.showLoginIPRanges = false;         
+          }
+          this.profileMetaData.loginIpRanges = this.loginIpRanges;
          // this.profileMetaData.loginIpRanges.push({"description":"","endAddress":"","startAddress":""});
           // for(let i = 0; i < tempdata.loginIpRanges.length; i++) 
           // {
@@ -340,7 +384,7 @@ export default class UserSetupPage extends LightningElement {
           // }
           // this.profileMetaData.loginIpRanges = loginIpRanges;  
          // this.profileMetaData = Object.assign({}, tempdata);
-          console.log('this.profileMetaData.loginIpRanges', JSON.stringify(this.profileMetaData.loginIpRanges));
+         
  
       }
       handleModal()
@@ -377,13 +421,15 @@ export default class UserSetupPage extends LightningElement {
         this.showLoginIPRanges = true;
         this.noLoginIPRanges = false;
        // this.newloginIpRange = {"description":"","endAddress":"","startAddress":""};
-        this.profileMetaData.loginIpRanges.push(this.newloginIpRange);
+        this.loginIpRanges.push(this.newloginIpRange);
+        this.profileMetaData.loginIpRanges = this.loginIpRanges;
         this.showModal = false;
         this.newloginIpRange ={"description":"","endAddress":"","startAddress":""};
         console.log('this.profileMetaData.loginIpRanges', JSON.stringify(this.profileMetaData.loginIpRanges));
       }
     handleSave() 
     {
+      console.log('this.profileMetaData bef', JSON.stringify(this.profileMetaData));
       if(this.profileMetaData.loginHours.sundayStart == undefined)
       {
         this.profileMetaData.loginHours.sundayStart = null;

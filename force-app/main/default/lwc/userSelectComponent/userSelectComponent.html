@@ -6,7 +6,7 @@
                     <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
                         <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                             <lightning-input class={inputClass} type="search" id="input" value={searchTerm}
-                                                        onblur={onBlur} onchange={onChange}
+                                                        onblur={onBlur} onchange={onChange} label="Select Profile"
                                                         variant="label-hidden" autocomplete="off" placeholder={searchPlaceholder}>
                                         </lightning-input>
                         </div>
@@ -51,7 +51,7 @@
                     <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                         <template for:each={records} for:item="record">
                             <li role="presentation" key={record.id} class="slds-listbox__item" >
-                                <div onclick={handleSelect} data-id={record.Id} data-name={record.Name}
+                                <div onclick={handleSelect} data-id={record.ProfileId} data-name={record.Profile.Name}
                                     class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
                                     role="option">
                                     <span class="slds-media__figure slds-listbox__option-icon">
@@ -61,7 +61,7 @@
                                     <span class="slds-media__body">
                                         <span class="slds-listbox__option-text slds-listbox__option-text_entity">
                                             <span>
-                                                <mark>{record.Name}</mark>
+                                                <mark>{record.Profile.Name}</mark>
                                             </span>
                                         </span>
                                      <!--   <div  if:true={record.subField} class="slds-listbox__option-meta slds-listbox__option-meta_entity">

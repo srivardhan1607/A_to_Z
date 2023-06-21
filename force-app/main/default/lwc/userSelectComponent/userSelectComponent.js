@@ -33,9 +33,14 @@ import { api, LightningElement, track, wire } from 'lwc';
         wiredRecords({ error, data }) {
             if (data) {           
                 this.error = undefined;
-               // console.log('data -->'+JSON.stringify(data)); 
-
-                    this.records = data;           
+                // let records = JSON.parse(JSON.stringify(data));
+                // for(let i=0; i < records.length; i++)
+                // {
+                //     console.log('rec'+JSON.stringify(records[i]));
+                //     this.records[i].Id = records[i].ProfileId;
+                //     this.records[i].Name = records[i].Profile.Name;
+                // }
+          this.records = data;
                     this.showrelatedrecords = true;
             } else if (error) {
                 this.error = error;
